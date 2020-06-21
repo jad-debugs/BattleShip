@@ -1,0 +1,415 @@
+import java.util.Scanner;
+class Main {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+
+        int[] coorOfAttackP1 = new int[2];
+        int[] coorOfAttackP2 = new int[2];
+
+        int[][] player1coor = player1();
+        int[][] player1grid = createGrid(player1coor);
+
+        int[][] player2coor = player2();
+        int[][] player2grid = createGrid(player2coor);
+
+
+        String winner = "null";
+        while(true) {
+            System.out.println("Player 1, your turn. Coordinates to attack player 2 : ");
+            for (int i = 0; i < 2; i++) {
+                coorOfAttackP1[i] = input.nextInt();
+            }
+            boolean z = tellHit(player2grid, coorOfAttackP1);
+            player2grid = checkForAttack(player2grid, coorOfAttackP1);
+            if (z == true) {
+                System.out.println("You hit one of my boats!");
+            } else {
+                System.out.println("You did not hit one of my boats");
+            }
+            if (boatSunk2(player2grid)) {
+                System.out.println("Player 2 boat sunken");
+            }
+            if (boatSunk3(player2grid)) {
+                System.out.println("Player 2 boat sunken");
+            }
+            if (boatSunk4(player2grid)) {
+                System.out.println("Player 2 boat sunken");
+            }
+                if(checkingPlayerAlive(player1grid) || checkingPlayerAlive(player2grid)){
+                    break;
+                }
+            System.out.println("Player 2, your turn. Coordinates to attack player 1 : ");
+            for (int i = 0; i < 2; i++) {
+                coorOfAttackP2[i] = input.nextInt();
+            }
+            boolean k = tellHit(player1grid, coorOfAttackP2);
+            player1grid = checkForAttack(player1grid, coorOfAttackP2);
+            if (k == true) {
+                System.out.println("You hit one of my boats!");
+            } else {
+                System.out.println("You did not hit one of my boats");
+            }
+            if (boatSunk2(player1grid)) {
+                System.out.println("Player 1 boat sunken");
+            }
+            if (boatSunk3(player1grid)) {
+                System.out.println("Player 1 boat sunken");
+            }
+            if (boatSunk4(player1grid)) {
+                System.out.println("Player 1 boat sunken");
+            }
+            if(checkingPlayerAlive(player1grid) || checkingPlayerAlive(player2grid)){
+                break;
+            }
+        }
+        if (checkingPlayerAlive(player1grid)){
+            winner = "player 2";
+
+        }
+        if(checkingPlayerAlive(player2grid)){
+            winner = "player 1";
+        }
+        System.out.println("Congrats" + " " + winner + ", you have won!");
+    }
+    public static int[][] player1(){
+        System.out.println("Player 1, choose coordinates of your boats!");
+        int[] player1b2XYf = boatSize2Front();
+        int[] player1b2XYe = boatSize2End();
+        int[] player1b3XYf = boatSize3Front();
+        int[] player1b3XYe = boatSize3End();
+        int[] player1b4XYf = boatSize4Front();
+        int[] player1b4XYe = boatSize4End();
+
+        int[][] player1CoorXY = new int[6][2];
+        //boat 2
+        player1CoorXY[0][0] = player1b2XYf[0];
+        player1CoorXY[0][1] = player1b2XYf[1];
+        player1CoorXY[1][0] = player1b2XYe[0];
+        player1CoorXY[1][1] = player1b2XYe[1];
+        //boat 3
+        player1CoorXY[2][0] = player1b3XYf[0];
+        player1CoorXY[2][1] = player1b3XYf[1];
+        player1CoorXY[3][0] = player1b3XYe[0];
+        player1CoorXY[3][1] = player1b3XYe[1];
+        //boat 4
+        player1CoorXY[4][0] = player1b4XYf[0];
+        player1CoorXY[4][1] = player1b4XYf[1];
+        player1CoorXY[5][0] = player1b4XYe[0];
+        player1CoorXY[5][1] = player1b4XYe[1];
+
+
+        return player1CoorXY;
+    }
+
+    public static int[][] player2(){
+        System.out.println("Player 2, choose coordinates of your boats!");
+        int[] player2b2XYf = boatSize2Front();
+        int[] player2b2XYe = boatSize2End();
+        int[] player2b3XYf = boatSize3Front();
+        int[] player2b3XYe = boatSize3End();
+        int[] player2b4XYf = boatSize4Front();
+        int[] player2b4XYe = boatSize4End();
+
+        int[][] player2CoorXY = new int[6][2];
+        //boat 2
+        player2CoorXY[0][0] = player2b2XYf[0];
+        player2CoorXY[0][1] = player2b2XYf[1];
+        player2CoorXY[1][0] = player2b2XYe[0];
+        player2CoorXY[1][1] = player2b2XYe[1];
+        //boat 3
+        player2CoorXY[2][0] = player2b3XYf[0];
+        player2CoorXY[2][1] = player2b3XYf[1];
+        player2CoorXY[3][0] = player2b3XYe[0];
+        player2CoorXY[3][1] = player2b3XYe[1];
+        //boat 4
+        player2CoorXY[4][0] = player2b4XYf[0];
+        player2CoorXY[4][1] = player2b4XYf[1];
+        player2CoorXY[5][0] = player2b4XYe[0];
+        player2CoorXY[5][1] = player2b4XYe[1];
+
+
+        return player2CoorXY;
+    }
+    public static int[] boatSize2Front(){
+        Scanner input = new Scanner(System.in);
+        int[] size2boatXYf = new int[2];
+
+        System.out.println("Time to choose coordinates, for your size 2 boat(Front). Enter X coordinate range [0,9]. Tap enter and enter Y coordinate range [0,9]");
+        for(int i = 0; i < 2; i++){
+            size2boatXYf[i] = input.nextInt();
+        }
+        return size2boatXYf;
+    }
+    public static int[] boatSize2End(){
+        Scanner input = new Scanner(System.in);
+        int[] size2boatXYe = new int[2];
+
+        System.out.println("Time to choose coordinates, for your size 2 boat(End). Enter X coordinate range [0,9]. Tap enter and enter Y coordinate range [0,9]");
+        for(int i = 0; i < 2; i++){
+            size2boatXYe[i] = input.nextInt();
+        }
+        return size2boatXYe;
+    }
+    public static int[] boatSize3Front(){
+        Scanner input = new Scanner(System.in);
+        int[] size3boatXYf = new int[2];
+
+        System.out.println("Time to choose coordinates, for your size 3 boat(front), enter X coor first, tap enter and enter Y coor. Must be greater than 0,less than 9,0 based");
+
+        for(int i = 0; i < 2; i++){
+            size3boatXYf[i] = input.nextInt();
+        }
+        return size3boatXYf;
+    }
+    public static int[] boatSize3End(){
+        Scanner input = new Scanner(System.in);
+        int[] size3boatXYe = new int[2];
+
+        System.out.println("Time to choose coordinates, for your size 3 boat(end), enter X coor first, tap enter and enter Y coor. Must be greater than 0,less than 9,0 based");
+
+        for(int i = 0; i < 2; i++){
+            size3boatXYe[i] = input.nextInt();
+        }
+        return size3boatXYe;
+    }
+    public static int[] boatSize4Front(){
+        Scanner input = new Scanner(System.in);
+        int[] size4boatXYf = new int[2];
+
+        System.out.println("Time to choose coordinates, for your size 4 boat(front), enter X coor first, tap enter and enter Y coor. Must be greater than 0,less than 9,0 based");
+
+        for(int i = 0; i < 2; i++){
+            size4boatXYf[i] = input.nextInt();
+        }
+        return size4boatXYf;
+    }
+    public static int[] boatSize4End(){
+        Scanner input = new Scanner(System.in);
+        int[] size4boatXYe = new int[2];
+
+        System.out.println("Time to choose coordinates, for your size 4 boat(end), enter X coor first, tap enter and enter Y coor. Must be greater than 0, less than 9,0 based");
+
+        for(int i = 0; i < 2; i++){
+            size4boatXYe[i] = input.nextInt();
+        }
+        return size4boatXYe;
+    }
+    //Creating Smart Grid
+    public static int[][] createGrid(int[][] item){
+        int[][] grid = new int[10][10];
+        // inum b2
+        int b2x1 = item[0][0];
+        int b2y1 = item[0][1];
+        int b2x2 = item[1][0];
+        int b2y2 = item[1][1];
+
+        grid[b2x1][b2y1] = 2;
+        grid[b2x2][b2y2] = 2;
+        // end of inum b2
+        //inum b3
+        int b3x1 = item[2][0];
+        int b3y1 = item[2][1];
+        int b3x2 = item[3][0];
+        int b3y2 = item[3][1];
+
+        grid[b3x1][b3y1] = 3;
+        grid[b3x2][b3y2] = 3;
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(grid[i][j] == 3 && grid[i+1][j] == 0 && grid[i+2][j] == 3){
+                    grid[i+1][j] = 3;
+                }
+                else if(grid[i][j] == 3 && grid[i][j+1] == 0 && grid[i][j+2] == 3){
+                    grid[i][j+1] = 3;
+                }
+            }
+        }
+        //inum end b3
+
+        //start inum b4
+        int b4x1 = item[4][0];
+        int b4y1 = item[4][1];
+        int b4x2 = item[5][0];
+        int b4y2 = item[5][1];
+
+        grid[b4x1][b4y1] = 4;
+        grid[b4x2][b4y2] = 4;
+
+        for(int h = 0; h < 8; h++){
+            for(int k = 0; k < 8; k++){
+                if(grid[h][k] == 4 && grid[h+1][k] == 0 && grid[h+3][k] == 4){
+                    grid[h+1][k] = 4;
+                    grid[h+2][k] = 4;
+                }
+                else if(grid[h][k] == 4 && grid[h][k+1] == 0 && grid[h][k+3] == 4){
+                    grid[h][k+1] = 4;
+                    grid[h][k+2] = 4;
+                }
+            }
+        }
+        //end inum b4
+        return grid;
+    }
+
+    // attacking Time
+
+    public static boolean tellHit(int[][] grid, int[] coorOfAttack){
+        boolean x = false;
+        int xVal = coorOfAttack[0];
+        int yVal = coorOfAttack[1];
+        if(2 == grid[xVal][yVal]){
+            grid[xVal][yVal] = 0;
+            x = true;
+        }
+
+        if(3 == grid[xVal][yVal]){
+            grid[xVal][yVal] = 0;
+            x = true;
+        }
+        if(4 == grid[xVal][yVal]) {
+            grid[xVal][yVal] = 0;
+            x = true;
+        }
+        return x;
+    }
+    public static boolean boatSunk2(int[][] grid){
+        boolean x = true;
+        while(true) {
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 10; j++){
+                    if(grid[i][j] == 2) {
+                        x = false;
+                    }
+                }
+            }
+            return x;
+        }
+    }
+    public static boolean boatSunk3(int[][] grid){
+        boolean x = true;
+        while(true) {
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 10; j++){
+                    if(grid[i][j] == 3) {
+                        x = false;
+                    }
+                }
+            }
+            return x;
+        }
+    }
+    public static boolean boatSunk4(int[][] grid){
+        boolean x = true;
+        while(true) {
+            for(int i = 0; i < 10; i++) {
+                for(int j = 0; j < 10; j++){
+                    if(grid[i][j] == 4) {
+                        x = false;
+                    }
+                }
+            }
+            return x;
+        }
+    }
+    public static int[][] checkForAttack(int[][] grid, int[] coorOfAttack){
+        int xVal = coorOfAttack[0];
+        int yVal = coorOfAttack[1];
+        if(grid[xVal][yVal] == 2){
+            grid[xVal][yVal] = 0;
+        }
+        if(grid[xVal][yVal] == 3){
+            grid[xVal][yVal] = 0;
+        }
+        if(grid[xVal][yVal] == 4){
+            grid[xVal][yVal] = 0;
+        }
+        return grid;
+    }
+    public static boolean checkingPlayerAlive(int[][] grid){
+        boolean x = false;
+        if(boatSunk2(grid)){
+            if(boatSunk3(grid)){
+                if(boatSunk4(grid)){
+                    x = true;
+                }
+            }
+        }
+        return x;
+    }
+}
+
+
+
+
+
+
+/* checking p1 matrix
+		int[][] x = player1();
+		for(int i = 0; i < x.length; i++){
+			for(int j = 0; j < x[0].length; j++){
+				System.out.print(x[i][j]+ " ");
+			}
+			System.out.println();
+		}
+checking p2 matrix
+		int[][] y = player2();
+		for(int h = 0; h < y.length; h++){
+			for(int k = 0; k < y[0].length; k++){
+				System.out.print(y[h][k]+ " ");
+			}
+			System.out.println();
+
+			input.next().charAt(0);
+			//inum X b2
+			int XnumOfIndexX2 = item[0][0];
+			int XnumOfIndexY2 = Math.min(item[0][1],item[1][1]);
+		if(item[0][0] == item[0][1]){
+			for(int h = 0; h < 2;h++){
+				grid[XnumOfIndexX2][h+XnumOfIndexY2] = 2;
+			}
+		}
+
+		//inum Y b2
+		int YnumOfIndexY2 = item[0][1];
+		int YnumOfIndexX2 = Math.min(item[0][0],item[0][1]);
+		if(item[1][1] == item[0][1]){
+			for(int k = 0; k < 2;k++){
+				grid[k+YnumOfIndexX2][YnumOfIndexY2] = 2;
+			}
+		}
+		}
+		//inum X b3
+			int XnumOfIndexX3 = item[2][0];
+			int XnumOfIndexY3 = Math.min(item[2][1],item[3][1]);
+		if(item[2][0] == item[3][0]){
+			for(int h = 0; h < 3;h++){
+				grid[XnumOfIndexX3][h+XnumOfIndexY3] = 3;
+			}
+		}
+
+		//inum Y b3
+		int YnumOfIndexY3 = item[0][1];
+		int YnumOfIndexX3 = Math.min(item[2][0],item[3][0]);
+		if(item[2][1] == item[3][1]){
+			for(int k = 0; k < 3;k++){
+				grid[k+YnumOfIndexX3][YnumOfIndexY3] = 3;
+			}
+		}
+
+		return grid;
+
+		for(int i = 0; i < player1grid.length; i++){
+			for(int j = 0; j < player1grid[0].length; j++){
+				System.out.print(player1grid[i][j]+ " ");
+			}
+			System.out.println();
+		}
+
+
+		for(int h = 0; h < player2grid.length; h++){
+			for(int k = 0; k < player2grid[0].length; k++){
+				System.out.print(player2grid[h][k]+ " ");
+			}
+			System.out.println();
+		}
+		*/
